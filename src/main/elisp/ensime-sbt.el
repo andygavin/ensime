@@ -90,7 +90,7 @@
     (comint-mode)
 
     (set (make-local-variable 'compilation-error-regexp-alist)
-	 '(("^\\[error\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
+	 '(("^\\[error\\] \\(\\(?:[A-Z]:\\)?[-_.a-zA-Z0-9/\\\\]+[.]scala\\):\\([0-9]+\\):"
 	    1 2 nil 2 nil)))
     (set (make-local-variable 'compilation-mode-font-lock-keywords)
 	 '(("^\\[error\\] Error running compile:"
