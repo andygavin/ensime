@@ -1,21 +1,29 @@
+/**
+* Much of this code is derived from the excellent tool,
+* ClassUtil, by Brian M. Clapper
+* 
+* Copyright 2010, Brian M. Clapp
+* All Rights Reserved
+*/
+
 package org.ensime.util
 
 import scala.collection.mutable.{ Set => MutableSet }
 import scala.collection.mutable.{ HashMap, HashSet }
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.commons.EmptyVisitor;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.FieldVisitor
+import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.commons.EmptyVisitor
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.Opcodes
 import java.io._
 import java.util.jar.{ JarFile, Manifest => JarManifest }
 import java.util.zip._
 import java.io.{ File, InputStream, IOException }
 
 trait ClassHandler {
-  def onClass(name: String, location: String, flags:Int) {}
-  def onMethod(className: String, name: String, location: String, flags:Int) {}
-  def onField(className: String, name: String, location: String, flags:Int) {}
+  def onClass(name: String, location: String, flags: Int) {}
+  def onMethod(className: String, name: String, location: String, flags: Int) {}
+  def onField(className: String, name: String, location: String, flags: Int) {}
 }
 
 private class ClassVisitor(location: File, handler: ClassHandler) extends EmptyVisitor {
@@ -65,7 +73,14 @@ object ClassIterator {
 
   def find(path: Iterable[File], handler: ClassHandler) {
     for (f <- path) {
-      findClassesIn(f, handler)
+      try {
+        findClassesIn(f, handler)
+      } catch {
+        case e: IOException => {
+          System.err.println("Failed to open: " + f)
+          e.printStackTrace(System.err)
+        }
+      }
     }
   }
 

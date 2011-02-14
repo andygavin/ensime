@@ -149,9 +149,9 @@ object ExternalConfigInterface {
     println("Loading sbt build.properties from " + propFile + ".")
     val props = JavaProperties.load(propFile)
 
-    val v = props.get("build.scala.versions").map(_.toString).getOrElse("2.8.0")
+    val v = props.get("build.scala.versions").map(_.toString).getOrElse("2.8.1")
     val projName = props.get("project.name").map(_.toString)
-    println("Scala Build version is " + v)
+    println("sbt Scala Build version is " + v)
 
     val f = new File(baseDir, "target/scala_" + v + "/classes")
     val target = if (f.exists) { Some(toCanonFile(f)) } else { None }
@@ -160,15 +160,6 @@ object ExternalConfigInterface {
     val runtimeDeps = ListBuffer[CanonFile]()
     val testDeps = ListBuffer[CanonFile]()
     val srcPaths = ListBuffer[CanonFile]()
-
-    val scalaLibDir = "project/boot/scala-" + v + "/lib"
-
-    println("Searching for scala libs in " + scalaLibDir)
-    var jarRoots = maybeDirs(List(scalaLibDir), baseDir)
-    val scalaJars = expandRecursively(baseDir, jarRoots, isValidJar _)
-    compileDeps ++= scalaJars
-    runtimeDeps ++= scalaJars
-    testDeps ++= scalaJars
 
     println("Adding this project's dependencies..")
     val info = activeSubproject match {
